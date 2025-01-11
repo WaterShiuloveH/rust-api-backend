@@ -3,8 +3,10 @@ use sea_orm::{ActiveModelTrait, Database, DbConn, EntityTrait, IntoActiveModel, 
 use serde::{Deserialize, Serialize};
 mod entities;
 use actix_web::middleware::Logger;
+use dotenvy::dotenv;
 use entities::tasks;
 use env_logger;
+use std::env;
 
 #[derive(Deserialize)]
 struct NewTask {
@@ -104,16 +106,17 @@ async fn delete_task(db: web::Data<DbConn>, path: web::Path<(i32,)>) -> impl Res
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init();
+    dotenv().ok();
+
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL not set");
 
     // Connect to the database
-    let db = Database::connect(
-        "sqlite:///Users/shiutzfan/Desktop/GeekFolder/rust-api-backend/db.sqlite",
-    )
-    .await
-    .unwrap_or_else(|err| {
-        eprintln!("Error connecting to the database: {}", err);
-        std::process::exit(1);
-    });
+    let db = Database::connect(&database_url)
+        .await
+        .unwrap_or_else(|err| {
+            eprintln!("Error connecting to the database: {}", err);
+            std::process::exit(1);
+        });
 
     // Start Actix-web server
     HttpServer::new(move || {
