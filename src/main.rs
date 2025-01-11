@@ -17,7 +17,7 @@ struct TaskResponse {
     id: i32,
     title: String,
     description: Option<String>,
-    is_completed: bool,
+    created_at: String,
 }
 
 async fn get_tasks(db: web::Data<DbConn>) -> impl Responder {
@@ -29,7 +29,7 @@ async fn get_tasks(db: web::Data<DbConn>) -> impl Responder {
             id: task.id,
             title: task.title,
             description: task.description,
-            is_completed: task.is_completed,
+            created_at: task.created_at,
         })
         .collect();
 
@@ -51,7 +51,6 @@ async fn create_task(db: web::Data<DbConn>, new_task: web::Json<NewTask>) -> imp
     let task = tasks::ActiveModel {
         title: Set(new_task.title.clone()),
         description: Set(new_task.description.clone()),
-        is_completed: Set(false),
         ..Default::default()
     };
 
