@@ -1,16 +1,13 @@
-mod handlers;
 mod entities;
+mod handlers; 
 
 use actix_web::{web, App, HttpServer};
 use actix_web::middleware::Logger;
 use dotenvy::dotenv;
 use env_logger;
 use std::env;
-use handlers::tasks::{
-    create_task, delete_task, get_task_by_id, get_tasks, update_task,
-};
+use crate::handlers::tasks::{create_task, delete_task, get_task_by_id, get_tasks, update_task};
 use sea_orm::Database;
-
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

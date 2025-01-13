@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
 pub struct NewTask {
-    pub title: String,
+   pub  title: String,
     pub description: Option<String>,
 }
 
